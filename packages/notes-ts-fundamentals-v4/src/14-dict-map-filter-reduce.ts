@@ -45,6 +45,42 @@ function filterDict(...args: any[]): any {}
 // Array.prototype.reduce, but for Dict
 function reduceDict(...args: any[]): any {}
 
+//? Implement mapDict
+function mapDict<T, U>(
+  dict: Dict<T>,
+  callback: (value: T, key: string) => U,
+): Dict<U> {
+  const result: Dict<U> = {}
+  for (let key in dict.keys) {
+    result[key] = callback(dict[key], key)
+  }
+  return result
+}
+//? Implement filterDict
+function filterDict<T>(
+  inputDict: Dict<T>,
+  callback: (value: T) => boolean,
+): Dict<T> {
+  const result: Dict<T> = {}
+  for (let key of Object.keys(inputDict)) {
+    if (callback(inputDict[key])) {
+      result[key] = inputDict[key]
+    }
+  }
+  return result
+}
+//? Implement reduceDict
+function reduceDict<T, S>(
+  inputDict: Dict<T>,
+  reductCallBackFunc: (curNum: S, original: T) => S,
+  initialValue: S,
+): S {
+  let result: S = initialValue
+  for (let key of Object.keys(inputDict)) {
+    result = reductCallBackFunc(result, inputDict[key])
+  }
+  return result
+}
 /////////////////////////////////////////
 ///////////// TEST SUITE ///////////////
 //////// no need to modify these ////////
@@ -54,7 +90,7 @@ function reduceDict(...args: any[]): any {}
 const fruitsWithKgMass = mapDict(fruits, (fruit, name) => ({
   ...fruit,
   kg: 0.001 * fruit.mass,
-  name,
+  name: name,
 }))
 const lemonName: string = fruitsWithKgMass.lemon.name
 // @ts-ignore-error
